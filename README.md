@@ -1,5 +1,10 @@
-# Recipe-Vault-
-A personal recipe manager that turns scattered recipes — handwritten cards, cookbook scans, screenshots, or recipe websites — into one organized, searchable collection.
+# Recipe Vault
 
-# Lost or forgot about a recipe you have been meaning to cook?
-Ever read a recipe online or watched a youtube video and wanted to cook that dish, but forgot about it? Look no further than recipe vault where you can organize your recipes, whether original or not, into one organized and searchable collection so that you can come back to it when you want to cook it!
+Ever read a recipe online, snap a photo of a cookbook page, or watch a 
+recipe video and think "I'll cook that sometime" — then completely lose 
+track of it?
+
+Recipe Vault pulls recipes in from wherever you find them — handwritten 
+cards, cookbook scans, screenshots, or websites — and turns them into 
+one organized, searchable collection. Find what you were planning to 
+cook, whenever you're ready to cook it.
