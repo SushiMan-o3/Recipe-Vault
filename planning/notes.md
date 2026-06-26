@@ -12,7 +12,7 @@
 ## In terms of tech stack
 - FastAPI (backend) + React w typescript + axios for sending and recieving from backend (frontend)
 - jwt tokens for login and authentication + hash password before storing and retriving for login
-- sqlite for now -> PostgreSQL
+- sqlite for now -> PostgreSQL (+ SQLAlchemy)
 - docling for reading photos, pdfs, etc and beautifulsoup for scraping the web
 
 ## Some basic resources
