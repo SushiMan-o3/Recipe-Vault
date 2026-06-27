@@ -2,7 +2,9 @@
 ## What i am thinking
 - use a basic ETL (extract transform load) pipeline to essentially take raw data from PDFs using docling then transform it using anthropics api to then load it into the database for future use. i mean another idea i did have was i could possibly just create somehthing to clean the data myself but 
 - probaby take the time to play around with docling tomorrow or the day out of tomorrow so I take a break from this project then figure out what docling is then come back to this project then write implement it on the small scale and code the pipeline
-- was also thinking of making the ingredients and equipment for each recipe more complicated but then i realized the simpler it is the easier it is going to be for me to code and understand and there's sort of i guess less moving parts for me to mess up 
+- was also thinking of making the ingredients and equipment for each recipe more complicated but then i realized the simpler it is the easier it is going to be for me to code and understand and there's sort of i guess less moving parts for me to mess up
+- i got some webscraping + docling properly but docling is lowk kinda cheeks as in it sometimes cant detect stuff that is hand written or a bit wonky. webscraping is working pretty fine using httpx to get the webscraping content then using beautiful soup to extract the text and docling is using easyocr to extract text from photos any images without any ocr which is kinda nice but it definetly takes much longer than it should.
+- i think the next step is sort of redesigning the backend file structure and the code for the backend and sort of get a basic frontend running. the file structure is pretty bad but i dont really know how to go about fixing it and working with it. my files are sort of organized but are all over the place
 
 ## Next Steps
 - learn about docling and how it works
