@@ -26,8 +26,8 @@ class Recipe(Base):
     userid = Column(Integer, ForeignKey("users.id"), nullable=False)
     
     user = relationship("User", back_populates="recipes")
-    ingredients = relationship("Ingredient", back_populates="recipe")
-    equipments = relationship("Equipment", back_populates="recipe")
+    ingredients = relationship("Ingredient", back_populates="recipe", cascade="all, delete-orphan")
+    equipments = relationship("Equipment", back_populates="recipe", cascade="all, delete-orphan")
 
 
 class Ingredient(Base):
@@ -35,8 +35,6 @@ class Ingredient(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(Text, nullable=False)
-    quantity = Column(Integer, nullable=False)
-    unit = Column(String(20), nullable=False)
     recipeid = Column(Integer, ForeignKey("recipes.id"), nullable=False)
     
     recipe = relationship("Recipe", back_populates="ingredients")
