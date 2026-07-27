@@ -13,3 +13,7 @@ pass
 
 ### Frontend
 pass
+
+## Database Schema
+[insert image]
+

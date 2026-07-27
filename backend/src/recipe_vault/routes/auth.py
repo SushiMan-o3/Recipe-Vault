@@ -1,5 +1,6 @@
 from fastapi import APIRouter
-from schemas.auth import Token
+from schemas.auth import Token, UserCreate, UserLogin
+
 # do loadenv for bcyprts hashing algo, secret key, etc
 
 route = APIRouter(
