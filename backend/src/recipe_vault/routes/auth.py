@@ -2,16 +2,36 @@ from fastapi import APIRouter, HTTPException, status
 from schemas.auth import Token, UserCreate, UserLogin
 import bcrypt
 from database import create_connection, close_connection
+from dotenv import load_dotenv
+import os
+import jwt
+from datetime import datetime, timedelta, timezone
 
-# do loadenv for bcyprts hashing algo, secret key, etc
 
 route = APIRouter(
     prefix="/auth",
     tags=["auth"],
 )
 
-def create_token(user: str):
-    pass
+
+load_dotenv()
+
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = os.getenv("ALGORITHM")
+ACESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
+
+
+def create_jwt_auth_token(data: dict, expires_delta: timedelta) -> str:
+    to_encode = data.copy()
+    to_encode["exp"] = datetime.now(timezone.utc) + expires_delta
+    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+
+
+def create_access_token(username: str) -> str:
+    return create_jwt_auth_token(
+        {"sub": username},
+        timedelta(minutes=ACESS_TOKEN_EXPIRE_MINUTES),
+    )
 
 
 def hash_password(password: str) -> str:
@@ -56,7 +76,7 @@ def login(user: UserLogin):
                 detail="Invalid username or password",
             )
         
-        token = create_token(user_data["username"])
+        token = create_access_token(user_data["username"])
         
         return {
             "access_token": token,
@@ -68,16 +88,20 @@ def login(user: UserLogin):
     finally:
         close_connection(conn, cursor)
 
+
 @route.post("/register", response_class=Token)
 def register(user: UserCreate):
     
     conn, cursor = None, None
     
     try:
-        pass
+        conn, cursor = create_connection()
     except:
-        pass
+        raise Exception("User registration failed")
     finally:
         close_connection(conn, cursor)
 
-        
+
+@route.put("/change-password")
+def change_password(user: UserLogin):
+    pass

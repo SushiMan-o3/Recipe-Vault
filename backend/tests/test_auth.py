@@ -12,3 +12,11 @@ def test_login_invalid_email():
 
 def test_login_invalid_password():
     pass
+
+
+def test_change_password():
+    # change it to new password then change it back
+    pass
+
+def test_change_password_same_as_old():
+    pass
