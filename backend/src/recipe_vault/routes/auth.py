@@ -1,24 +1,18 @@
-from fastapi import APIRouter, HTTPException, status
-from schemas.auth import Token, UserCreate, UserLogin
-import bcrypt
-from database import create_connection, close_connection
-from dotenv import load_dotenv
-import os
-import jwt
 from datetime import datetime, timedelta, timezone
+
+import bcrypt
+import jwt
+from fastapi import APIRouter, HTTPException, status
+
+from recipe_vault.config import ACCESS_TOKEN_EXPIRE_MINUTES, ALGORITHM, SECRET_KEY
+from recipe_vault.database import close_connection, create_connection
+from recipe_vault.schemas.auth import Token, UserCreate, UserLogin
 
 
 route = APIRouter(
     prefix="/auth",
     tags=["auth"],
 )
-
-
-load_dotenv()
-
-SECRET_KEY = os.getenv("SECRET_KEY")
-ALGORITHM = os.getenv("ALGORITHM")
-ACESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
 
 
 def create_jwt_auth_token(data: dict, expires_delta: timedelta) -> str:
@@ -30,7 +24,7 @@ def create_jwt_auth_token(data: dict, expires_delta: timedelta) -> str:
 def create_access_token(username: str) -> str:
     return create_jwt_auth_token(
         {"sub": username},
-        timedelta(minutes=ACESS_TOKEN_EXPIRE_MINUTES),
+        timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
     )
 
 

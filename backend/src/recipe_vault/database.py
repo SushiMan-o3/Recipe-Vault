@@ -1,12 +1,8 @@
 import psycopg2
 import psycopg2.extras
-from dotenv import load_dotenv
-import os
 
-# load database url
-load_dotenv()
+from recipe_vault.config import DATABASE_URL
 
-DATABASE_URL = os.getenv("DATABASE_URL")
 
 def create_connection():
     conn, cursor = None, None

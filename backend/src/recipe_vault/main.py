@@ -1,13 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from database import init_db
-from routes import auth
-from dotenv import load_dotenv
-import os
 
-load_dotenv()
-
-FRONTEND_URL = os.getenv("FRONTEND_URL")
+from recipe_vault.config import FRONTEND_URL
+from recipe_vault.database import init_db
+from recipe_vault.routes import auth
 
 app = FastAPI()
 
