@@ -32,6 +32,7 @@ def init_db():
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS Users (
                 id SERIAL PRIMARY KEY,
+                email VARCHAR(255) NOT NULL UNIQUE,
                 username VARCHAR(20) NOT NULL UNIQUE,
                 password VARCHAR(255) NOT NULL
             );
