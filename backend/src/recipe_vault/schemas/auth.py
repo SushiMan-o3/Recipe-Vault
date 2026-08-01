@@ -2,9 +2,9 @@ from pydantic import BaseModel, EmailStr
 
 
 class Token(BaseModel):
-    user: str
-    token: str
-
+    access_token: str
+    token_type: str = "bearer"
+    
 
 class UserCreate(BaseModel):
     email: EmailStr

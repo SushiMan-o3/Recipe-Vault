@@ -1,4 +1,5 @@
 import psycopg2
+import psycopg2.extras
 from dotenv import load_dotenv
 import os
 
@@ -9,13 +10,13 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 
 def create_connection():
     conn, cursor = None, None
-    
+
     try:
         conn = psycopg2.connect(DATABASE_URL)
-        cursor = conn.cursor()
-    except:
-        raise Exception("Database connection failed")
-    
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    except Exception as e:
+        raise Exception("Database connection failed") from e
+
     return conn, cursor
 
 def close_connection(conn, cursor):
@@ -24,14 +25,14 @@ def close_connection(conn, cursor):
             cursor.close()
         if conn:
             conn.close()
-    except:
-        raise Exception("Failed to close database connection")
-    
-    
+    except Exception as e:
+        raise Exception("Failed to close database connection") from e
+
+
 def init_db():
     try:
-        conn, cursor = create_connection(DATABASE_URL)
-        
+        conn, cursor = create_connection()
+
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS Users (
                 id SERIAL PRIMARY KEY,
@@ -42,7 +43,7 @@ def init_db():
         """)
         conn.commit()
         close_connection(conn, cursor)
-    except:
-        raise Exception("Database initialization failed")
+    except Exception as e:
+        raise Exception("Database initialization failed") from e
     
     

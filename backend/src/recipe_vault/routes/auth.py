@@ -63,7 +63,6 @@ def login(user: UserLogin):
         cursor.execute("SELECT * FROM users WHERE username = %s OR email = %s", (user.user, user.user))
         user_data = cursor.fetchone()
         
-        close_connection(conn, cursor)
         if not user_data:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
@@ -83,8 +82,13 @@ def login(user: UserLogin):
             "token_type": "bearer",
         }
         
-    except:
-        raise Exception("User authentication failed")
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="User authentication failed",
+        )
     finally:
         close_connection(conn, cursor)
 
@@ -96,8 +100,13 @@ def register(user: UserCreate):
     
     try:
         conn, cursor = create_connection()
-    except:
-        raise Exception("User registration failed")
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="User registration failed",
+        )
     finally:
         close_connection(conn, cursor)
 
