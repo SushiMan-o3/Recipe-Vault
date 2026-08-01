@@ -7,8 +7,11 @@ class Token(BaseModel):
 
 
 class UserCreate(BaseModel):
-    pass
+    email: EmailStr
+    username: str
+    password: str
 
 
 class UserLogin(BaseModel):
-    pass
+    user: str
+    password: str
