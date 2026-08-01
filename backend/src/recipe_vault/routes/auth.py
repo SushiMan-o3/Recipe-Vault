@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException, status
 from schemas.auth import Token, UserCreate, UserLogin
+import bcrypt
 from database import create_connection, close_connection
 
 # do loadenv for bcyprts hashing algo, secret key, etc
@@ -9,11 +10,21 @@ route = APIRouter(
     tags=["auth"],
 )
 
-def create_token():
+def create_token(user: str):
     pass
 
-def verify_password(plain_password, hashed_password):
+
+def hash_password(password: str) -> str:
+    return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    return bcrypt.checkpw(plain_password.encode("utf-8"), hashed_password.encode("utf-8"))
+
+
+def get_user_from_token(token: str):
     pass
+
 
 @route.post("/login", response_model=Token)
 def login(user: UserLogin):
@@ -45,7 +56,7 @@ def login(user: UserLogin):
                 detail="Invalid username or password",
             )
         
-        token = create_token()
+        token = create_token(user_data["username"])
         
         return {
             "access_token": token,
@@ -54,8 +65,19 @@ def login(user: UserLogin):
         
     except:
         raise Exception("User authentication failed")
-
+    finally:
+        close_connection(conn, cursor)
 
 @route.post("/register", response_class=Token)
 def register(user: UserCreate):
-    pass
+    
+    conn, cursor = None, None
+    
+    try:
+        pass
+    except:
+        pass
+    finally:
+        close_connection(conn, cursor)
+
+        

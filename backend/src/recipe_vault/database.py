@@ -1,14 +1,17 @@
 import psycopg2
-import dotenv
+from dotenv import load_dotenv
+import os
 
 # load database url
-dotenv.load_dotenv()
+load_dotenv()
+
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 def create_connection():
     conn, cursor = None, None
     
     try:
-        conn = psycopg2.connect()
+        conn = psycopg2.connect(DATABASE_URL)
         cursor = conn.cursor()
     except:
         raise Exception("Database connection failed")
@@ -27,7 +30,7 @@ def close_connection(conn, cursor):
     
 def init_db():
     try:
-        conn, cursor = create_connection()
+        conn, cursor = create_connection(DATABASE_URL)
         
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS Users (
