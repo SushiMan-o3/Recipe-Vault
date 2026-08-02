@@ -1,7 +1,7 @@
 import psycopg2
 import psycopg2.extras
 
-from recipe_vault.config import DATABASE_URL
+from config import DATABASE_URL
 
 
 def create_connection():

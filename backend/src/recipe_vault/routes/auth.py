@@ -2,11 +2,12 @@ from datetime import datetime, timedelta, timezone
 
 import bcrypt
 import jwt
+import re
 from fastapi import APIRouter, HTTPException, status
 
-from recipe_vault.config import ACCESS_TOKEN_EXPIRE_MINUTES, ALGORITHM, SECRET_KEY
-from recipe_vault.database import close_connection, create_connection
-from recipe_vault.schemas.auth import Token, UserCreate, UserLogin
+from config import ACCESS_TOKEN_EXPIRE_MINUTES, ALGORITHM, SECRET_KEY
+from database import close_connection, create_connection
+from schemas.auth import Token, UserCreate, UserLogin, forgotPasswordRequest
 
 
 route = APIRouter(
@@ -87,13 +88,60 @@ def login(user: UserLogin):
         close_connection(conn, cursor)
 
 
-@route.post("/register", response_class=Token)
+@route.post("/register", response_model=Token)
 def register(user: UserCreate):
     
     conn, cursor = None, None
     
     try:
         conn, cursor = create_connection()
+
+        cursor.execute("SELECT * FROM users WHERE username = %s", (user.username,))
+        existing_user = cursor.fetchone()
+
+        if existing_user:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Username already taken",
+            )
+
+        cursor.execute("SELECT * FROM users WHERE email = %s", (user.email,))
+        existing_user = cursor.fetchone()
+
+        if existing_user:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Email already taken",
+            )
+
+        if len(user.password) < 8:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Password must be at least 8 characters long",
+            )
+
+        if not re.match(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&^#()_+\-=\[\]{};':\"\\|,.<>/?]).{8,}$", user.password):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Password must contain at least one uppercase letter, one lowercase letter, and one number",
+            )
+
+        hashed_password = hash_password(user.password)
+
+        cursor.execute(
+            "INSERT INTO users (email, username, password) VALUES (%s, %s, %s) RETURNING *",
+            (user.email, user.username, hashed_password),
+        )
+        new_user = cursor.fetchone()
+        conn.commit()
+
+        token = create_access_token(new_user["username"])
+
+        return {
+            "access_token": token,
+            "token_type": "bearer",
+        }
+    
     except HTTPException:
         raise
     except Exception:
@@ -105,6 +153,31 @@ def register(user: UserCreate):
         close_connection(conn, cursor)
 
 
-@route.put("/change-password")
-def change_password(user: UserLogin):
-    pass
+@route.put("/forgot-password", response_model=None)
+def forgot_password(email: forgotPasswordRequest):
+    conn, cursor = None, None
+    
+    try:
+        conn, cursor = create_connection()
+
+        cursor.execute("SELECT * FROM users WHERE email = %s", (email.email,))
+        existing_user = cursor.fetchone()
+
+        if not existing_user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Email not found",
+            )
+
+        # do some other stuff here, figure it out later 
+
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Forgot password failed",
+        )
+    finally:
+        close_connection(conn, cursor)
+
