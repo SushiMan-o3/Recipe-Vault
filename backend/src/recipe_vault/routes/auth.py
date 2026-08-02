@@ -114,6 +114,12 @@ def register(user: UserCreate):
                 detail="Email already taken",
             )
 
+        if not re.match(r"^[a-zA-Z0-9_.-]{3,20}$", user.username):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Username must be 3-20 characters long and can only contain letters, numbers, underscores, hyphens, and periods",
+            )
+
         if len(user.password) < 8:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
