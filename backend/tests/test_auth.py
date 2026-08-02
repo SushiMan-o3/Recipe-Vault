@@ -87,6 +87,10 @@ def test_register_valid(client, db):
     response = client.post("/auth/register", json=register_payload())
 
     assert response.status_code == 200
+
+    # The profile row is created alongside the user, pointing at its id.
+    assert len(db.users) == 1
+    assert db.user_info == [{"user_id": db.users[0]["id"]}]
     body = response.json()
     assert body["token_type"] == "bearer"
     assert body["access_token"]

@@ -36,6 +36,43 @@ def init_db():
                 username VARCHAR(20) NOT NULL UNIQUE,
                 password VARCHAR(255) NOT NULL
             );
+
+            CREATE TABLE IF NOT EXISTS AdditionalUserInfo (
+                id SERIAL PRIMARY KEY,
+                user_id INTEGER NOT NULL REFERENCES Users(id) ON DELETE CASCADE,
+                first_name VARCHAR(50),
+                last_name VARCHAR(50),
+                birthday DATE,
+                gender VARCHAR(10),
+                profile_picture_url TEXT,
+                bio TEXT
+            );
+
+            CREATE TABLE IF NOT EXISTS Recipes (
+                id SERIAL PRIMARY KEY,
+                user_id INTEGER NOT NULL REFERENCES Users(id) ON DELETE CASCADE,
+                title VARCHAR(255) NOT NULL,
+                description TEXT,
+                instructions TEXT NOT NULL,
+                durationInMinutes INTEGER NOT NULL,
+                serving INTEGER NOT NULL,
+                notes TEXT
+            );
+
+            CREATE TABLE IF NOT EXISTS ingredients (
+                id SERIAL PRIMARY KEY,
+                name TEXT NOT NULL,
+                recipeid INTEGER NOT NULL,
+                FOREIGN KEY (recipeid) REFERENCES recipes(id) ON DELETE CASCADE
+            );
+
+            CREATE TABLE IF NOT EXISTS equipments (
+                id SERIAL PRIMARY KEY,
+                name TEXT NOT NULL,
+                recipeid INTEGER NOT NULL,
+                FOREIGN KEY (recipeid) REFERENCES recipes(id) ON DELETE CASCADE
+            );
+
         """)
         conn.commit()
         close_connection(conn, cursor)

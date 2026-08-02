@@ -33,7 +33,9 @@ class FakeDB:
 
     def __init__(self):
         self.users = []
+        self.user_info = []
         self.pending = []
+        self.pending_info = []
         self.next_id = 1
 
     def add(self, email, username, password):
@@ -74,6 +76,10 @@ class FakeCursor:
                 self._result = [r for r in self._db.users if r["email"] == params[0]]
             return
 
+        if q.startswith("insert into additionaluserinfo"):
+            self._db.pending_info.append({"user_id": params[0]})
+            return
+
         if q.startswith("insert into users"):
             email, username, password = params
             row = {
@@ -112,10 +118,13 @@ class FakeConnection:
     def commit(self):
         self.commits += 1
         self._db.users.extend(self._db.pending)
+        self._db.user_info.extend(self._db.pending_info)
         self._db.pending.clear()
+        self._db.pending_info.clear()
 
     def rollback(self):
         self._db.pending.clear()
+        self._db.pending_info.clear()
 
     def close(self):
         self.closed = True

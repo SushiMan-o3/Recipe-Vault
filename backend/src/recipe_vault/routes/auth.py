@@ -139,6 +139,12 @@ def register(user: UserCreate):
             (user.email, user.username, hashed_password),
         )
         new_user = cursor.fetchone()
+
+        cursor.execute(
+            "INSERT INTO additionaluserinfo (user_id) VALUES (%s)",
+            (new_user["id"],),
+        )
+
         conn.commit()
 
         token = create_access_token(new_user["username"])
