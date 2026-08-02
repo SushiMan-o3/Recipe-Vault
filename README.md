@@ -15,5 +15,5 @@ pass
 pass
 
 ## Database Schema
-[insert image]
+<img width="655" height="468" alt="image" src="https://github.com/user-attachments/assets/59ad0b20-4770-4abd-b929-0cad8e5be93a" />
 
