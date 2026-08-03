@@ -44,6 +44,7 @@ def init_db():
                 last_name VARCHAR(50),
                 birthday DATE,
                 gender VARCHAR(10),
+                country VARCHAR(56),
                 profile_picture_url TEXT,
                 bio TEXT
             );

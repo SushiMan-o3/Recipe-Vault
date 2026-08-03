@@ -25,7 +25,7 @@ real_init_db = database.init_db
 database.init_db = lambda: None
 
 import main  # noqa: E402
-import routes.auth as auth_routes  # noqa: E402
+import services.security as security  # noqa: E402
 
 
 class FakeDB:
@@ -158,7 +158,7 @@ def seed_user(db):
         email="test@example.com",
         password="Password1!",
     ):
-        db.add(email, username, auth_routes.hash_password(password))
+        db.add(email, username, security.hash_password(password))
         return {"username": username, "email": email, "password": password}
 
     return _seed
