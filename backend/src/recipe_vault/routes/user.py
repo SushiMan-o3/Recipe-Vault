@@ -100,3 +100,8 @@ def update_profile(userid: int, additional_info: UpdateAdditionalInfo):
 @route.put("/{user_id}/update-profile-picture")
 def update_profile_picture(userid: int, profile_picture: UpdateProfilePicture):
     pass
+
+
+"""
+Follow and unfollow system below
+"""
