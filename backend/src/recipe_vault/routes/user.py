@@ -48,12 +48,18 @@ def get_profile(userid: int):
 
 
 @route.put("/{user_id}")
-def update_profile(userid: int, additional_info: UpdateAdditionalInfo):
+def update_profile(userid: int, additional_info: UpdateAdditionalInfo, UserModel = Depends(get_current_user)):
     if not userid:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="User ID is required",
         )
+        
+    if current_user["user_id"] != userid:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized"
+        )
+
 
     try:
         conn, cursor = create_connection()
