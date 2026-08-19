@@ -1,14 +1,8 @@
 fastapi
 uvicorn
-pydantic
-email-validator
-sqlalchemy
-psycopg2-binary
-python-dotenv
 python-multipart
-pyjwt
-pytest
 httpx
-bcrypt
-anthropic
 beautifulsoup4
+anthropic
+python-dotenv
+psycopg2-binary
